@@ -10854,7 +10854,7 @@ const ROLE_ICON_CUSTOM = 'M10 9.6a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2ZM4 16.
 const roleIco = n => ROLE_ICONS[n] || ROLE_ICON_CUSTOM;
 const stepsDone = w => w.stepDone != null ? w.stepDone : Math.round((w.pct || 0) / 100 * (w.steps || 0));
 const wfConns = w => { const l = [w.from, w.to].concat(w.conns || []).filter(Boolean); return l.filter((x, i) => l.indexOf(x) === i); };
-const SYS_CATS = ['All connectors', 'Finance', 'ERP', 'Ecommerce', 'Database', 'CRM', 'Others', 'Files'];
+const SYS_CATS = ['All connectors', 'Finance', 'ERP', 'Ecommerce', 'Database', 'CRM', 'Others', 'Files', 'Test'];
 const SYS_CARDS = [
   { name: 'Shopify', cat: 'Ecommerce', type: 'Public', version: '2.4.1', used: true },
   { name: 'Epicor P21', cat: 'ERP', type: 'Private', version: '1.8.0', used: true, stale: true },
@@ -18507,7 +18507,7 @@ class Component extends DCLogic {
             hover: T === k ? 'color:var(--text)' : 'color:var(--text);background:var(--elev2)',
             countStyle: T === k ? 'color:var(--accent-t)' : 'color:var(--muted)',
             pick: () => this.setState({ connTab: k, sysMenu: null }) })),
-          sysTabEmpty: !n[T] && !(this.state.sysQuery || '').trim() ? true : !n[T],
+          sysTabEmpty: !n[T] && this.buildSysCards(false).length > 0,
           sysTabEmptyMsg: T === 'private' ? 'No private connectors yet. Build one with Create new connector.' : T === 'old' ? 'No old connectors in this organization.' : 'No public connectors connected yet. Connect one from the list below.',
           sysTabSub: D[T][1],
           sysShowAvail: true, sysTabPriv: T === 'private',
@@ -18617,8 +18617,8 @@ class Component extends DCLogic {
       sysCardStyle: this.state.view === 'projects' ? 'box-sizing:border-box;padding:16px;border-radius:16px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--panel-line);display:flex;flex-direction:column;gap:22px' : 'display:flex;flex-direction:column;gap:26px',
       sysAddNew: e => { if (e) e.stopPropagation(); this.setState({ sbOpen: true, sbName: '', sbDoc: '', sbDesc: '', sbLogoName: '', sbLogoUrl: '', sysMenu: null }); },
       sysEmpty: this.buildSysCards(true).length === 0 && (this.state.view !== 'projects' || (this.buildSysCards(false).length === 0 && this.buildPrivateCards().length === 0)) && !(!!this.freshOrg() && this.buildSysCards(true).length === 0 && !(this.state.sysQuery || '').trim()),
-      sysEmptyTitle: this.state.view === 'projects' ? 'No systems in this category yet' : 'No connections here',
-      sysEmptySub: this.state.view === 'projects' ? 'Pick another category, clear the search, or add a system from your account.' : 'This workspace doesn’t use a system in this category. Pick another category or clear the search.',
+      sysEmptyTitle: this.state.view === 'projects' ? 'No connectors in this category yet' : 'No connections here',
+      sysEmptySub: this.state.view === 'projects' ? 'Pick another category, clear the search, or create a new connector.' : 'This workspace doesn’t use a system in this category. Pick another category or clear the search.',
       isNew: this.state.view === 'new',
       backToWsFlows: () => this.setState(s => ({ view: 'projects', projNav: 'projects', aiOpen: false, sysEdit: null, projMenu: null, wfMenu: null, wsDrill: s.project })),
       wsfl: (() => { const S = this.state; if (S.view !== 'wsFlows') return { on: false };
